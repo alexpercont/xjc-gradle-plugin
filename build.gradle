@@ -1,5 +1,7 @@
 plugins {
     id 'java-gradle-plugin'
+    id 'jacoco'
+    id 'org.sonarqube' version '4.4.1.3373'
 }
 
 group = 'io.github.percontmx.plugins.xjc'
@@ -9,11 +11,39 @@ repositories {
     mavenCentral()
 }
 
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+
 dependencies {
-    //testImplementation platform('org.junit:junit-bom:5.10.0')
-    //testImplementation 'org.junit.jupiter:junit-jupiter'
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation gradleTestKit()
+}
+
+gradlePlugin {
+    plugins {
+        xjc {
+            id = 'io.github.percontmx.xjc-plugin'
+            implementationClass = 'io.github.percontmx.plugins.xjc.XjcPlugin'
+        }
+    }
 }
 
 test {
-    //useJUnitPlatform()
+    useJUnit()
+}
+
+jacocoTestReport {
+    reports {
+        xml.required = true
+    }
+}
+
+sonar {
+    properties {
+        property "sonar.projectKey", "percontmx_xjc-gradle-plugin"
+        property "sonar.organization", "percontmx"
+        property "sonar.host.url", "https://sonarcloud.io"
+    }
 }
