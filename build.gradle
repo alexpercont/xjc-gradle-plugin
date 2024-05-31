@@ -1,5 +1,6 @@
 plugins {
     id 'java-gradle-plugin'
+    id 'org.sonarqube' version '4.4.1.3373'
 }
 
 group = 'io.github.percontmx.plugins.xjc'
@@ -30,4 +31,12 @@ gradlePlugin {
 
 test {
     useJUnit()
+}
+
+sonar {
+    properties {
+        property "sonar.projectKey", "percontmx_xjc-gradle-plugin"
+        property "sonar.organization", "percontmx"
+        property "sonar.host.url", "https://sonarcloud.io"
+    }
 }
