@@ -1,5 +1,6 @@
 package io.github.percontmx.plugins.xjc;
 
+import org.gradle.testkit.runner.BuildResult;
 import org.gradle.testkit.runner.GradleRunner;
 import org.junit.Assert;
 import org.junit.Before;
@@ -31,21 +32,21 @@ public class XjcPluginTest {
 
     @Test
     public void testApplyingPlugin() {
-        // TODO implement unit test
-        GradleRunner.create()
+        BuildResult result = GradleRunner.create()
                 .withProjectDir(temp.getRoot())
                 .withPluginClasspath()
-                .withArguments("tasks");
-        Assert.assertTrue(true);
+                .withArguments("tasks")
+                .build();
+        Assert.assertTrue(result.getOutput().contains("xjc"));
     }
 
     @Test
     public void testRunningTastXjc() {
-        // TODO implement unit test.
-        GradleRunner.create()
+        BuildResult result = GradleRunner.create()
                 .withProjectDir(temp.getRoot())
                 .withPluginClasspath()
-                .withArguments("xjc");
-        Assert.assertTrue(true);
+                .withArguments("xjc")
+                .buildAndFail();
+        Assert.assertTrue(result.getOutput().contains("BUILD FAILED"));
     }
 }
