@@ -1,109 +1,69 @@
 package io.github.percontmx.plugins.xjc;
 
-import org.gradle.testkit.runner.BuildResult;
-import org.gradle.testkit.runner.GradleRunner;
-import org.junit.Assert;
+import io.github.percontmx.plugins.xjc.impl.XjcTask;
+import org.gradle.api.Project;
+import org.gradle.testfixtures.ProjectBuilder;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+import org.junit.rules.TestName;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.Objects;
 
 public class XjcTaskTest {
 
     @Rule
+    public TestName testName = new TestName();
+
+    @Rule
     public TemporaryFolder projectDir = new TemporaryFolder();
 
-    private final static String BUILD_FILE_CONTENTS = """
-                plugins {
-                    id 'io.github.percontmx.xjc-plugin'
-                }
-                
-                repositories {
-                    mavenCentral()
-                }
-                """;
+    private Project testProject;
 
-    @Test
-    public void shouldGenerateCodeWhenSourceSchemaIsSpecified() throws IOException {
-        String sampleSchemaPath = Objects.requireNonNull(getClass().getResource("schema_01.xsd")).getPath();
-        String testBuildFileWithSource = BUILD_FILE_CONTENTS.concat("""                
-                xjc {
-                    source = 'sampleSchemaPath'
-                }
-                """).replace("sampleSchemaPath", sampleSchemaPath);
-        File file = projectDir.newFile("build.gradle");
-        try (FileWriter writer = new FileWriter(file)) {
-            writer.write(testBuildFileWithSource);
-        }
-
-        BuildResult build = GradleRunner.create()
-                .withProjectDir(projectDir.getRoot()).withArguments("xjc")
-                .withPluginClasspath()
+    @Before
+    public void defineBaseProject() {
+        testProject = ProjectBuilder.builder()
+                .withProjectDir(projectDir.getRoot())
+                .withName(testName.getMethodName())
                 .build();
-        System.out.println(build.getOutput());
-        Assert.assertTrue(build.getOutput().contains("BUILD SUCCESSFUL"));
+        testProject.getPluginManager().apply("io.github.percontmx.xjc-plugin");
+        testProject.getRepositories().add(testProject.getRepositories().mavenCentral());
     }
 
     @Test
-    public void shouldGenerateCodeWhenSourceDirectoryIsSpecified() throws IOException {
+    public void shouldGenerateCodeWhenSourceSchemaIsSpecified() {
+       String schemaPath = Objects.requireNonNull(getClass().getResource("schema_01.xsd"))
+                .getPath();
+
+       XjcTask xjc = (XjcTask) testProject.getTasks().getByName("xjc");
+       xjc.setSource(schemaPath);
+       xjc.exec();
+
+    }
+
+    @Test
+    public void shouldGenerateCodeWhenSourceDirectoryIsSpecified() {
         String sampleSchemaPath = Objects.requireNonNull(getClass().getResource("schema_01.xsd")).getPath();
         File f = new File(sampleSchemaPath);
         String sampleSchemaDir = f.getParent();
-        String testBuildFileWithSource = BUILD_FILE_CONTENTS.concat("""                
-                xjc {
-                    source = 'sampleSchemaDir'
-                }
-                """).replace("sampleSchemaDir", sampleSchemaDir);
-        File file = projectDir.newFile("build.gradle");
-        try (FileWriter writer = new FileWriter(file)) {
-            writer.write(testBuildFileWithSource);
-        }
 
-        BuildResult build = GradleRunner.create()
-                .withProjectDir(projectDir.getRoot()).withArguments("xjc")
-                .withPluginClasspath()
-                .build();
-        System.out.println(build.getOutput());
-        Assert.assertTrue(build.getOutput().contains("BUILD SUCCESSFUL"));
+        XjcTask xjc = (XjcTask) testProject.getTasks().getByName("xjc");
+        xjc.setSource(sampleSchemaDir);
+        xjc.exec();
     }
 
     @Test
-    public void shouldGenerateCodeWhenSourceUrlIsSpecified() throws IOException {
-        String sampleSchemaUrl = "http://www.sat.gob.mx/sitio_internet/cfd/tipoDatos/tdCFDI/tdCFDI.xsd";
-        String testBuildFileWithSource = BUILD_FILE_CONTENTS.concat("""                
-                xjc {
-                    source = 'sampleSchemaUrl'
-                }
-                """).replace("sampleSchemaUrl", sampleSchemaUrl);
-        File file = projectDir.newFile("build.gradle");
-        try (FileWriter writer = new FileWriter(file)) {
-            writer.write(testBuildFileWithSource);
-        }
-
-        BuildResult build = GradleRunner.create()
-                .withProjectDir(projectDir.getRoot()).withArguments("xjc")
-                .withPluginClasspath()
-                .build();
-        System.out.println(build.getOutput());
-        Assert.assertTrue(build.getOutput().contains("BUILD SUCCESSFUL"));
+    public void shouldGenerateCodeWhenSourceUrlIsSpecified() {
+        String url = "http://www.sat.gob.mx/sitio_internet/cfd/tipoDatos/tdCFDI/tdCFDI.xsd";
+        XjcTask xjc = (XjcTask) testProject.getTasks().getByName("xjc");
+        xjc.setSource(url);
+        xjc.exec();
     }
 
-    @Test
-    public void shouldFailWhenSourceIsNotSpecified() throws IOException {
-        File file = projectDir.newFile("build.gradle");
-        try (FileWriter writer = new FileWriter(file)) {
-            writer.write(BUILD_FILE_CONTENTS);
-        }
-
-        BuildResult build = GradleRunner.create()
-                .withProjectDir(projectDir.getRoot()).withArguments("xjc")
-                .withPluginClasspath()
-                .buildAndFail();
-        System.out.println(build.getOutput());
-        Assert.assertTrue(build.getOutput().contains("property 'source' doesn't have a configured value"));
+    @Test(expected = IllegalArgumentException.class)
+    public void shouldFailWhenSourceIsNotSpecified() {
+        ((XjcTask) testProject.getTasks().getByName("xjc")).exec();
     }
 }
