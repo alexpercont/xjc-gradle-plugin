@@ -3,6 +3,7 @@ package io.github.percontmx.plugins.xjc;
 import io.github.percontmx.plugins.xjc.impl.XjcTask;
 import org.gradle.api.Project;
 import org.gradle.testfixtures.ProjectBuilder;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -41,6 +42,12 @@ public class XjcTaskTest {
        xjc.setSource(schemaPath);
        xjc.exec();
 
+       File projectRoot = projectDir.getRoot();
+       Assert.assertNotNull(projectRoot);
+
+       File[] files = projectRoot.listFiles();
+       Assert.assertNotNull(files);
+       Assert.assertTrue(files.length > 0);
     }
 
     @Test
@@ -52,6 +59,13 @@ public class XjcTaskTest {
         XjcTask xjc = (XjcTask) testProject.getTasks().getByName("xjc");
         xjc.setSource(sampleSchemaDir);
         xjc.exec();
+
+        File projectRoot = projectDir.getRoot();
+        Assert.assertNotNull(projectRoot);
+
+        File[] files = projectRoot.listFiles();
+        Assert.assertNotNull(files);
+        Assert.assertTrue(files.length > 0);
     }
 
     @Test
@@ -60,6 +74,13 @@ public class XjcTaskTest {
         XjcTask xjc = (XjcTask) testProject.getTasks().getByName("xjc");
         xjc.setSource(url);
         xjc.exec();
+
+        File projectRoot = projectDir.getRoot();
+        Assert.assertNotNull(projectRoot);
+
+        File[] files = projectRoot.listFiles();
+        Assert.assertNotNull(files);
+        Assert.assertTrue(files.length > 0);
     }
 
     @Test(expected = IllegalArgumentException.class)

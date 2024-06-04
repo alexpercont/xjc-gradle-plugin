@@ -2,7 +2,6 @@ package io.github.percontmx.plugins.xjc.impl;
 
 import org.gradle.api.tasks.Input;
 import org.gradle.api.tasks.JavaExec;
-import org.gradle.api.tasks.Optional;
 
 import java.util.ArrayList;
 import java.util.List;
