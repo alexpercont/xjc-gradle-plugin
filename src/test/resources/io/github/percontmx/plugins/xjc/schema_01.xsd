@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+        targetNamespace="http://www.percont.com.mx/plugins/xjc/test"
+        xmlns:tst="http://www.percont.com.mx/plugins/xjc/test">
+
+    <complexType name="person">
+        <attribute name="name" type="string" use="required" />
+        <attribute name="dob" type="date" use="required" />
+    </complexType>
+
+    <element name="people">
+        <complexType>
+            <sequence>
+                <element name="person" type="tst:person" maxOccurs="unbounded" />
+            </sequence>
+        </complexType>
+    </element>
+
+</schema>
