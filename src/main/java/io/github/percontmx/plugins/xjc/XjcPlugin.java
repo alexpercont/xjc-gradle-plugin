@@ -12,12 +12,16 @@ public class XjcPlugin implements Plugin<Project> {
     public void apply(Project target) {
         target.getPluginManager().apply("java");
 
+        // Create XJC pluign configuration.
         target.getConfigurations().create("xjc", conf -> {
             conf.setVisible(false);
             conf.setTransitive(true);
             conf.setDescription("XJC configuration");
         });
 
+        // Adding JAXB-XJC dependency.
+        target.getDependencies().add("xjc",
+                "com.sun.xml.bind:jaxb-impl:4.0.5");
         target.getDependencies().add("xjc",
                 "com.sun.xml.bind:jaxb-xjc:4.0.5");
 
@@ -25,6 +29,8 @@ public class XjcPlugin implements Plugin<Project> {
                 DefaultXjcPluginExtension.class);
 
         target.getTasks().register("xjc", XjcTask.class, task -> {
+            XjcPluginExtension pluginExtension = target.getExtensions().getByType(XjcPluginExtension.class);
+            task.setSource(pluginExtension.getSource());
             task.setGroup("build");
             task.setDescription("Generates Java classes from XML schema");
             task.setClasspath(target.getConfigurations().getByName("xjc"));
