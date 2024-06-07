@@ -1,8 +1,13 @@
 package io.github.percontmx.plugins.xjc;
 
+import org.gradle.api.provider.Property;
+
+import java.io.File;
+
 public interface XjcPluginExtension {
 
-    String getSource();
+    Property<String> getSource();
 
-    void setSource(String source);
+    Property<File> getTarget();
+
 }

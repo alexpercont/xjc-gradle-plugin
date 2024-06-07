@@ -1,16 +1,29 @@
 package io.github.percontmx.plugins.xjc.impl;
 
 import io.github.percontmx.plugins.xjc.XjcPluginExtension;
+import org.gradle.api.model.ObjectFactory;
+import org.gradle.api.provider.Property;
+
+import javax.inject.Inject;
+import java.io.File;
 
 public class DefaultXjcPluginExtension implements XjcPluginExtension {
 
-    private String source;
+    private final Property<String> source;
 
-    public String getSource(){
+    private final Property<File> target;
+
+    @Inject
+    public DefaultXjcPluginExtension(ObjectFactory objects) {
+        this.source = objects.property(String.class);
+        this.target = objects.property(File.class);
+    }
+
+    public Property<String> getSource() {
         return source;
     }
 
-    public void setSource(String source){
-        this.source = source;
+    public Property<File> getTarget() {
+        return target;
     }
 }

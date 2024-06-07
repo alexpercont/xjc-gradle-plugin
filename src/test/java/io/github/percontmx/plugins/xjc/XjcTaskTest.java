@@ -2,6 +2,7 @@ package io.github.percontmx.plugins.xjc;
 
 import io.github.percontmx.plugins.xjc.impl.XjcTask;
 import org.gradle.api.Project;
+import org.gradle.api.internal.provider.MissingValueException;
 import org.gradle.testfixtures.ProjectBuilder;
 import org.junit.Assert;
 import org.junit.Before;
@@ -35,19 +36,28 @@ public class XjcTaskTest {
 
     @Test
     public void shouldGenerateCodeWhenSourceSchemaIsSpecified() {
-       String schemaPath = Objects.requireNonNull(getClass().getResource("schema_01.xsd"))
+        String schemaPath = Objects.requireNonNull(getClass().getResource("schema_01.xsd"))
                 .getPath();
+        testProject.getExtensions().getByType(XjcPluginExtension.class)
+                .getSource().set(schemaPath);
 
-       XjcTask xjc = (XjcTask) testProject.getTasks().getByName("xjc");
-       xjc.setSource(schemaPath);
-       xjc.exec();
+        ((XjcTask) testProject.getTasks().getByName("xjc")).exec();
+        validateGeneratedCodeInDefaultFolder();
+    }
 
-       File projectRoot = projectDir.getRoot();
-       Assert.assertNotNull(projectRoot);
+    private void validateGeneratedCodeInDefaultFolder() {
+        validateGeneratedCodeInDefaultFolder("/build/generated-sources/xjc");
+    }
 
-       File[] files = projectRoot.listFiles();
-       Assert.assertNotNull(files);
-       Assert.assertTrue(files.length > 0);
+    private void validateGeneratedCodeInDefaultFolder(String generatedFolder) {
+        File projectRoot = projectDir.getRoot();
+        Assert.assertNotNull(projectRoot);
+        File xjcFolder = new File(projectRoot.getAbsolutePath().concat(generatedFolder));
+        Assert.assertNotNull(xjcFolder);
+        Assert.assertTrue(xjcFolder.exists());
+        Assert.assertTrue(xjcFolder.isDirectory());
+        Assert.assertNotNull(xjcFolder.listFiles());
+        Assert.assertTrue(Objects.requireNonNull(xjcFolder.listFiles()).length > 0);
     }
 
     @Test
@@ -55,35 +65,22 @@ public class XjcTaskTest {
         String sampleSchemaPath = Objects.requireNonNull(getClass().getResource("schema_01.xsd")).getPath();
         File f = new File(sampleSchemaPath);
         String sampleSchemaDir = f.getParent();
-
-        XjcTask xjc = (XjcTask) testProject.getTasks().getByName("xjc");
-        xjc.setSource(sampleSchemaDir);
-        xjc.exec();
-
-        File projectRoot = projectDir.getRoot();
-        Assert.assertNotNull(projectRoot);
-
-        File[] files = projectRoot.listFiles();
-        Assert.assertNotNull(files);
-        Assert.assertTrue(files.length > 0);
+        testProject.getExtensions().getByType(XjcPluginExtension.class)
+                .getSource().set(sampleSchemaDir);
+        ((XjcTask) testProject.getTasks().getByName("xjc")).exec();
+        validateGeneratedCodeInDefaultFolder();
     }
 
     @Test
     public void shouldGenerateCodeWhenSourceUrlIsSpecified() {
-        String url = "http://www.sat.gob.mx/sitio_internet/cfd/tipoDatos/tdCFDI/tdCFDI.xsd";
-        XjcTask xjc = (XjcTask) testProject.getTasks().getByName("xjc");
-        xjc.setSource(url);
-        xjc.exec();
-
-        File projectRoot = projectDir.getRoot();
-        Assert.assertNotNull(projectRoot);
-
-        File[] files = projectRoot.listFiles();
-        Assert.assertNotNull(files);
-        Assert.assertTrue(files.length > 0);
+        String url = "https://jakarta.ee/xml/ns/jakartaee/web-common_6_0.xsd";
+        testProject.getExtensions().getByType(XjcPluginExtension.class)
+                .getSource().set(url);
+        ((XjcTask) testProject.getTasks().getByName("xjc")).exec();
+        validateGeneratedCodeInDefaultFolder();
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test(expected = MissingValueException.class)
     public void shouldFailWhenSourceIsNotSpecified() {
         ((XjcTask) testProject.getTasks().getByName("xjc")).exec();
     }
