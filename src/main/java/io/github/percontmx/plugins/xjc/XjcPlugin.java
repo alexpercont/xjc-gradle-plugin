@@ -27,7 +27,7 @@ public class XjcPlugin implements Plugin<Project> {
 
         target.getExtensions().create(XjcPluginExtension.class, "xjc",
                 DefaultXjcPluginExtension.class);
-        
+
         target.getTasks().register("xjc", XjcTask.class, task -> {
             XjcPluginExtension pluginExtension = target.getExtensions().getByType(XjcPluginExtension.class);
             task.getSource().set(pluginExtension.getSource());
@@ -36,7 +36,6 @@ public class XjcPlugin implements Plugin<Project> {
             task.setDescription("Generates Java classes from XML schema");
             task.setClasspath(target.getConfigurations().getByName("xjc"));
             task.getMainClass().set("com.sun.tools.xjc.XJCFacade");
-            //task.doFirst(action -> task.getProject().mkdir(pluginExtension.getTarget()));
         });
     }
 }
