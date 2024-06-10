@@ -1,4 +1,4 @@
-package io.github.percontmx.plugins.xjc.impl;
+package io.github.alexpercont.plugins.xjc.impl;
 
 import org.gradle.api.model.ObjectFactory;
 import org.gradle.api.provider.Property;

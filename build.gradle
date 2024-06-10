@@ -2,10 +2,11 @@ plugins {
     id 'java-gradle-plugin'
     id 'jacoco'
     id 'org.sonarqube' version '4.4.1.3373'
+    id 'com.gradle.plugin-publish' version '1.2.1'
 }
 
-group = 'io.github.percontmx.plugins.xjc'
-version = '1.0-SNAPSHOT'
+group = 'io.github.alexpercont.plugins.xjc'
+version = '1.0'
 
 repositories {
     mavenCentral()
@@ -22,10 +23,15 @@ dependencies {
 }
 
 gradlePlugin {
+    website = 'https://github.com/alexpercont/xjc-gradle-plugin'
+    vcsUrl = 'https://github.com/alexpercont/xjc-gradle-plugin'
     plugins {
         xjc {
-            id = 'io.github.percontmx.xjc-plugin'
-            implementationClass = 'io.github.percontmx.plugins.xjc.XjcPlugin'
+            id = 'io.github.alexpercont.xjc-plugin'
+            implementationClass = 'io.github.alexpercont.plugins.xjc.XjcPlugin'
+            tags = ['xjc', 'jaxb', 'java']
+            displayName = 'XJC Gradle Plugin'
+            description = 'A Gradle plugin to generate Java classes from XML Schema files using the XJC tool.'
         }
     }
 }
@@ -42,8 +48,8 @@ jacocoTestReport {
 
 sonar {
     properties {
-        property "sonar.projectKey", "percontmx_xjc-gradle-plugin"
-        property "sonar.organization", "percontmx"
+        property "sonar.projectKey", "alexpercont_xjc-gradle-plugin"
+        property "sonar.organization", "alexpercont"
         property "sonar.host.url", "https://sonarcloud.io"
     }
 }

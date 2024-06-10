@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <schema xmlns="http://www.w3.org/2001/XMLSchema"
-        targetNamespace="http://www.percont.com.mx/plugins/xjc/test"
-        xmlns:tst="http://www.percont.com.mx/plugins/xjc/test">
+        targetNamespace="http://github.io/alexpercont/plugins/xjc/test/schema"
+        xmlns:tst="http://github.io/alexpercont/plugins/xjc/test/schema">
 
     <complexType name="person">
         <attribute name="name" type="string" use="required" />

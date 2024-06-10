@@ -1,7 +1,7 @@
-package io.github.percontmx.plugins.xjc;
+package io.github.alexpercont.plugins.xjc;
 
-import io.github.percontmx.plugins.xjc.impl.DefaultXjcPluginExtension;
-import io.github.percontmx.plugins.xjc.impl.XjcTask;
+import io.github.alexpercont.plugins.xjc.impl.DefaultXjcPluginExtension;
+import io.github.alexpercont.plugins.xjc.impl.XjcTask;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 

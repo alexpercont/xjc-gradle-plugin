@@ -1,6 +1,6 @@
-package io.github.percontmx.plugins.xjc;
+package io.github.alexpercont.plugins.xjc;
 
-import io.github.percontmx.plugins.xjc.impl.XjcTask;
+import io.github.alexpercont.plugins.xjc.impl.XjcTask;
 import org.gradle.api.Project;
 import org.gradle.api.internal.provider.MissingValueException;
 import org.gradle.testfixtures.ProjectBuilder;
@@ -30,7 +30,7 @@ public class XjcTaskTest {
                 .withProjectDir(projectDir.getRoot())
                 .withName(testName.getMethodName())
                 .build();
-        testProject.getPluginManager().apply("io.github.percontmx.xjc-plugin");
+        testProject.getPluginManager().apply("io.github.alexpercont.xjc-plugin");
         testProject.getRepositories().add(testProject.getRepositories().mavenCentral());
     }
 
