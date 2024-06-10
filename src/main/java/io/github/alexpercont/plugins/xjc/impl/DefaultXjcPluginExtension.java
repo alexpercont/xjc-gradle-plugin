@@ -1,6 +1,6 @@
-package io.github.percontmx.plugins.xjc.impl;
+package io.github.alexpercont.plugins.xjc.impl;
 
-import io.github.percontmx.plugins.xjc.XjcPluginExtension;
+import io.github.alexpercont.plugins.xjc.XjcPluginExtension;
 import org.gradle.api.model.ObjectFactory;
 import org.gradle.api.provider.Property;
 

@@ -1,4 +1,4 @@
-package io.github.percontmx.plugins.xjc;
+package io.github.alexpercont.plugins.xjc;
 
 import org.gradle.api.provider.Property;
 
