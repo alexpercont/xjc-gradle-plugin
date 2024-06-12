@@ -1,13 +1,50 @@
 package io.github.alexpercont.plugins.xjc;
 
+import org.gradle.api.Project;
+import org.gradle.api.file.DirectoryProperty;
+import org.gradle.api.model.ObjectFactory;
 import org.gradle.api.provider.Property;
+import org.gradle.api.tasks.Input;
+import org.gradle.api.tasks.InputDirectory;
+import org.gradle.api.tasks.Optional;
 
-import java.io.File;
+import javax.inject.Inject;
 
-public interface XjcPluginExtension {
+/**
+ *
+ */
+public class XjcPluginExtension {
 
-    Property<String> getSource();
+    private static final String DEFAULT_OUTPUT_PATH = "generated-sources/xjc";
 
-    Property<File> getTarget();
+    private final Property<String> schema;
+    private final DirectoryProperty outputDir;
 
+    /**
+     * @param project project
+     */
+    @Inject
+    public XjcPluginExtension(final Project project) {
+        ObjectFactory objectFactory = project.getObjects();
+        this.schema = objectFactory.property(String.class);
+        this.outputDir = objectFactory.directoryProperty()
+                .convention(project.getLayout().getBuildDirectory().dir(DEFAULT_OUTPUT_PATH));
+    }
+
+    /**
+     * @return schema
+     */
+    @Input
+    public Property<String> getSchema() {
+        return schema;
+    }
+
+    /**
+     * @return outputDir
+     */
+    @InputDirectory
+    @Optional
+    public DirectoryProperty getOutputDir() {
+        return outputDir;
+    }
 }
