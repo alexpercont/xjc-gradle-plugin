@@ -1,41 +1,42 @@
 package io.github.alexpercont.plugins.xjc;
 
-import io.github.alexpercont.plugins.xjc.impl.DefaultXjcPluginExtension;
-import io.github.alexpercont.plugins.xjc.impl.XjcTask;
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
 
+/**
+ * XJC plugin
+ */
 @SuppressWarnings("unused")
 public class XjcPlugin implements Plugin<Project> {
 
     @Override
-    public void apply(Project target) {
-        target.getPluginManager().apply("java");
+    public void apply(Project project) {
+        // Apply Java plugin.
+        project.getPluginManager().apply("java");
 
         // Create XJC plugin configuration.
-        target.getConfigurations().create("xjc", conf -> {
-            conf.setVisible(false);
-            conf.setTransitive(true);
-            conf.setDescription("XJC configuration");
+        project.getConfigurations().create("xjc", configuration-> {
+            configuration.setVisible(false);
+            configuration.setTransitive(true);
+            configuration.setDescription("XJC configuration");
         });
 
         // Adding JAXB-XJC dependency.
-        target.getDependencies().add("xjc",
-                "com.sun.xml.bind:jaxb-impl:4.0.5");
-        target.getDependencies().add("xjc",
-                "com.sun.xml.bind:jaxb-xjc:4.0.5");
+        project.getDependencies().add("xjc", "com.sun.xml.bind:jaxb-impl:4.0.5");
+        project.getDependencies().add("xjc", "com.sun.xml.bind:jaxb-xjc:4.0.5");
 
-        target.getExtensions().create(XjcPluginExtension.class, "xjc",
-                DefaultXjcPluginExtension.class);
+        // Define XJC plugin extension.
+        project.getExtensions().create("xjc", XjcPluginExtension.class, project);
 
-        target.getTasks().register("xjc", XjcTask.class, task -> {
-            XjcPluginExtension pluginExtension = target.getExtensions().getByType(XjcPluginExtension.class);
-            task.getSource().set(pluginExtension.getSource());
-            task.getTarget().set(pluginExtension.getTarget().convention(target.file("build/generated-sources/xjc")));
+        // Define xjc task.
+        project.getTasks().register("xjc", XjcTask.class, task -> {
+            XjcPluginExtension pluginExtension = project.getExtensions().getByType(XjcPluginExtension.class);
             task.setGroup("build");
             task.setDescription("Generates Java classes from XML schema");
-            task.setClasspath(target.getConfigurations().getByName("xjc"));
+            task.setClasspath(project.getConfigurations().getByName("xjc"));
             task.getMainClass().set("com.sun.tools.xjc.XJCFacade");
+            task.getSchema().set(pluginExtension.getSchema());
+            task.getOutputDir().set(pluginExtension.getOutputDir());
         });
     }
 }

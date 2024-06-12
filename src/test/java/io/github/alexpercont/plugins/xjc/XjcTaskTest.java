@@ -1,6 +1,5 @@
 package io.github.alexpercont.plugins.xjc;
 
-import io.github.alexpercont.plugins.xjc.impl.XjcTask;
 import org.gradle.api.Project;
 import org.gradle.api.internal.provider.MissingValueException;
 import org.gradle.testfixtures.ProjectBuilder;
@@ -39,7 +38,7 @@ public class XjcTaskTest {
         String schemaPath = Objects.requireNonNull(getClass().getResource("schema_01.xsd"))
                 .getPath();
         testProject.getExtensions().getByType(XjcPluginExtension.class)
-                .getSource().set(schemaPath);
+                .getSchema().set(schemaPath);
 
         ((XjcTask) testProject.getTasks().getByName("xjc")).exec();
         validateGeneratedCodeInDefaultFolder();
@@ -66,7 +65,7 @@ public class XjcTaskTest {
         File f = new File(sampleSchemaPath);
         String sampleSchemaDir = f.getParent();
         testProject.getExtensions().getByType(XjcPluginExtension.class)
-                .getSource().set(sampleSchemaDir);
+                .getSchema().set(sampleSchemaDir);
         ((XjcTask) testProject.getTasks().getByName("xjc")).exec();
         validateGeneratedCodeInDefaultFolder();
     }
@@ -75,7 +74,7 @@ public class XjcTaskTest {
     public void shouldGenerateCodeWhenSourceUrlIsSpecified() {
         String url = "https://jakarta.ee/xml/ns/jakartaee/web-common_6_0.xsd";
         testProject.getExtensions().getByType(XjcPluginExtension.class)
-                .getSource().set(url);
+                .getSchema().set(url);
         ((XjcTask) testProject.getTasks().getByName("xjc")).exec();
         validateGeneratedCodeInDefaultFolder();
     }
