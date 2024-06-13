@@ -2,6 +2,7 @@ package io.github.alexpercont.plugins.xjc;
 
 import org.gradle.api.file.DirectoryProperty;
 import org.gradle.api.model.ObjectFactory;
+import org.gradle.api.provider.ListProperty;
 import org.gradle.api.provider.Property;
 import org.gradle.api.tasks.Input;
 import org.gradle.api.tasks.InputDirectory;
@@ -19,8 +20,8 @@ import java.util.List;
 public class XjcTask extends JavaExec {
 
     private final Property<String> schema;
-
     private final DirectoryProperty outputDir;
+    private final ListProperty<File> bindingPaths;
 
     /**
      * @param objectFactory object factory
@@ -29,6 +30,7 @@ public class XjcTask extends JavaExec {
     public XjcTask(ObjectFactory objectFactory) {
         this.schema = objectFactory.property(String.class);
         this.outputDir = objectFactory.directoryProperty();
+        this.bindingPaths = objectFactory.listProperty(File.class);
     }
 
     /**
@@ -48,6 +50,15 @@ public class XjcTask extends JavaExec {
         return outputDir;
     }
 
+    /**
+     * @return bindingPaths
+     */
+    @Input
+    @Optional
+    public ListProperty<File> getBindingPaths() {
+        return bindingPaths;
+    }
+
     @Override
     public void exec() {
         if (createOutputDirectory()) {
@@ -61,6 +72,8 @@ public class XjcTask extends JavaExec {
     private List<String> constructArgs() {
         List<String> args = new ArrayList<>();
         addOutputDirectory(args);
+        addBindingsDirectories(args);
+        addExtension(args);
         addSchemaDirectory(args);
         return args;
     }
@@ -70,8 +83,19 @@ public class XjcTask extends JavaExec {
         args.add(outputDir.get().getAsFile().getPath());
     }
 
+    private void addBindingsDirectories(final List<String> args) {
+        bindingPaths.get().forEach(file -> {
+            args.add("-b");
+            args.add(file.getPath());
+        });
+    }
+
     private void addSchemaDirectory(final List<String> args) {
         args.add(schema.get());
+    }
+
+    private void addExtension(final List<String> args) {
+        args.add("-extension");
     }
 
     private boolean createOutputDirectory() {
