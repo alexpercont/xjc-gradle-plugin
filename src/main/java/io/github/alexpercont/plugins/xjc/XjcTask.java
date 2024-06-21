@@ -21,7 +21,7 @@ public class XjcTask extends JavaExec {
 
     private final Property<String> schema;
     private final DirectoryProperty outputDir;
-    private final ListProperty<File> bindingPaths;
+    private final ListProperty<File> bindings;
 
     /**
      * @param objectFactory object factory
@@ -30,7 +30,7 @@ public class XjcTask extends JavaExec {
     public XjcTask(ObjectFactory objectFactory) {
         this.schema = objectFactory.property(String.class);
         this.outputDir = objectFactory.directoryProperty();
-        this.bindingPaths = objectFactory.listProperty(File.class);
+        this.bindings = objectFactory.listProperty(File.class);
     }
 
     /**
@@ -55,8 +55,8 @@ public class XjcTask extends JavaExec {
      */
     @Input
     @Optional
-    public ListProperty<File> getBindingPaths() {
-        return bindingPaths;
+    public ListProperty<File> getBindings() {
+        return bindings;
     }
 
     @Override
@@ -84,7 +84,7 @@ public class XjcTask extends JavaExec {
     }
 
     private void addBindingsDirectories(final List<String> args) {
-        bindingPaths.get().forEach(file -> {
+        bindings.get().forEach(file -> {
             args.add("-b");
             args.add(file.getPath());
         });

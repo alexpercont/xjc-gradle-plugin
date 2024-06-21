@@ -37,7 +37,7 @@ public class XjcPlugin implements Plugin<Project> {
             task.getMainClass().set("com.sun.tools.xjc.XJCFacade");
             task.getSchema().set(pluginExtension.getSchema());
             task.getOutputDir().set(pluginExtension.getOutputDir());
-            task.getBindingPaths().set(pluginExtension.getBindingPaths());
+            task.getBindings().set(pluginExtension.getBindingPaths());
         });
     }
 }
