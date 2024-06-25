@@ -1,6 +1,7 @@
 package io.github.alexpercont.plugins.xjc;
 
 import org.gradle.api.Project;
+import org.gradle.api.plugins.JavaPluginExtension;
 import org.gradle.testfixtures.ProjectBuilder;
 import org.junit.Assert;
 import org.junit.Before;
@@ -9,6 +10,7 @@ import org.junit.rules.TemporaryFolder;
 import org.junit.rules.TestName;
 
 import java.io.File;
+import java.util.Set;
 
 public abstract class AbstractXjcPluginTest {
 
@@ -44,5 +46,9 @@ public abstract class AbstractXjcPluginTest {
         File[] outputFiles = xjcFolder.listFiles();
         Assert.assertNotNull("XJC output folder is empty.", outputFiles);
         Assert.assertTrue("XJC output folder is empty.", outputFiles.length > 0);
+
+        Set<File> files = testProject.getExtensions().getByType(JavaPluginExtension.class)
+                .getSourceSets().getByName("main").getJava().getSrcDirs();
+        Assert.assertTrue("XJC output folder is not part of the Java source set", files.contains(xjcFolder));
     }
 }
