@@ -24,7 +24,7 @@ dependencies {
 }
 
 gradlePlugin {
-    website = 'https://github.com/alexpercont/xjc-gradle-plugin'
+    website = 'https://github.com/alexpercont/xjc-gradle-plugin/wiki'
     vcsUrl = 'https://github.com/alexpercont/xjc-gradle-plugin'
     plugins {
         xjc {
