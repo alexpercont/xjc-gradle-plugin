@@ -19,7 +19,7 @@ import java.util.List;
  */
 public class XjcTask extends JavaExec {
 
-    private final static String OUTPUT_DIR = "generated/sources/xjc";
+    private static final String OUTPUT_DIR = "generated/sources/xjc";
 
     private final Property<String> schema;
     private final DirectoryProperty outputDir;
@@ -105,6 +105,6 @@ public class XjcTask extends JavaExec {
         if (!outputDirectory.exists()) {
             return outputDirectory.mkdirs();
         }
-        return false;
+        return true;
     }
 }

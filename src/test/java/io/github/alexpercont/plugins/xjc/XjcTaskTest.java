@@ -2,6 +2,7 @@ package io.github.alexpercont.plugins.xjc;
 
 import org.gradle.api.Project;
 import org.gradle.api.internal.provider.MissingValueException;
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.*;
@@ -24,6 +25,9 @@ public class XjcTaskTest extends AbstractXjcPluginTest {
     @Test
     public void shouldGenerateCodeWhenSourceDirectoryIsSpecified() {
         Project testProject = getTestProject();
+        Assert.assertTrue(testProject.getLayout().getBuildDirectory()
+                .dir("generated/sources/xjc")
+                .get().getAsFile().mkdirs());
         String sampleSchemaPath = Objects.requireNonNull(getClass().getResource("schema_01.xsd")).getPath();
         File f = new File(sampleSchemaPath);
         String sampleSchemaDir = f.getParent();
