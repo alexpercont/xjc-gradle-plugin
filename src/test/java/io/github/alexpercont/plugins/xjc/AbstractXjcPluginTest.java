@@ -9,7 +9,6 @@ import org.junit.rules.TemporaryFolder;
 import org.junit.rules.TestName;
 
 import java.io.File;
-import java.util.Objects;
 
 public abstract class AbstractXjcPluginTest {
 
@@ -36,17 +35,14 @@ public abstract class AbstractXjcPluginTest {
     }
 
     protected void validateGeneratedCodeInDefaultFolder() {
-        validateGeneratedCodeInDefaultFolder("/build/generated-sources/xjc");
-    }
-
-    private void validateGeneratedCodeInDefaultFolder(String generatedFolder) {
-        File projectRoot = projectDirectory.getRoot();
-        Assert.assertNotNull(projectRoot);
-        File xjcFolder = new File(projectRoot.getAbsolutePath().concat(generatedFolder));
-        Assert.assertNotNull(xjcFolder);
-        Assert.assertTrue(xjcFolder.exists());
-        Assert.assertTrue(xjcFolder.isDirectory());
-        Assert.assertNotNull(xjcFolder.listFiles());
-        Assert.assertTrue(Objects.requireNonNull(xjcFolder.listFiles()).length > 0);
+        File projectFolder = testProject.getProjectDir();
+        Assert.assertNotNull("Project directory is null", projectFolder);
+        File xjcFolder = new File(projectFolder, "build/generated/sources/xjc");
+        Assert.assertNotNull("XJC output folder is null", xjcFolder);
+        Assert.assertTrue("XJC output folder does not exist.", xjcFolder.exists());
+        Assert.assertTrue("XJC output folder is not a directory.", xjcFolder.isDirectory());
+        File[] outputFiles = xjcFolder.listFiles();
+        Assert.assertNotNull("XJC output folder is empty.", outputFiles);
+        Assert.assertTrue("XJC output folder is empty.", outputFiles.length > 0);
     }
 }
