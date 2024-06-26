@@ -2,6 +2,8 @@ package io.github.alexpercont.plugins.xjc;
 
 import org.gradle.api.Plugin;
 import org.gradle.api.Project;
+import org.gradle.api.file.DirectoryProperty;
+import org.gradle.api.plugins.JavaPluginExtension;
 
 /**
  * XJC plugin
@@ -37,6 +39,13 @@ public class XjcPlugin implements Plugin<Project> {
             task.getMainClass().set("com.sun.tools.xjc.XJCFacade");
             task.getSchema().set(pluginExtension.getSchema());
             task.getBindings().set(pluginExtension.getBindingPaths());
+
+            DirectoryProperty outputDir = task.getOutputDir();
+            project.getExtensions().getByType(JavaPluginExtension.class)
+                    .getSourceSets().getByName("main").getJava()
+                    .srcDir(outputDir.get().getAsFile().getPath());
+
+
         });
     }
 }
