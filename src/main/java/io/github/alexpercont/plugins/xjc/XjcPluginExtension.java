@@ -20,7 +20,6 @@ public class XjcPluginExtension {
     private static final String DEFAULT_OUTPUT_PATH = "generated-sources/xjc";
 
     private final Property<String> schema;
-    private final DirectoryProperty outputDir;
     private final ListProperty<File> bindingPaths;
 
     /**
@@ -30,8 +29,6 @@ public class XjcPluginExtension {
     public XjcPluginExtension(final Project project) {
         ObjectFactory objectFactory = project.getObjects();
         this.schema = objectFactory.property(String.class);
-        this.outputDir = objectFactory.directoryProperty()
-                .convention(project.getLayout().getBuildDirectory().dir(DEFAULT_OUTPUT_PATH));
         this.bindingPaths = objectFactory.listProperty(File.class);
     }
 
@@ -41,15 +38,6 @@ public class XjcPluginExtension {
     @Input
     public Property<String> getSchema() {
         return schema;
-    }
-
-    /**
-     * @return outputDir
-     */
-    @InputDirectory
-    @Optional
-    public DirectoryProperty getOutputDir() {
-        return outputDir;
     }
 
     /**

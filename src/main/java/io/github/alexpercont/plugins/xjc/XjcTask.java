@@ -5,9 +5,9 @@ import org.gradle.api.model.ObjectFactory;
 import org.gradle.api.provider.ListProperty;
 import org.gradle.api.provider.Property;
 import org.gradle.api.tasks.Input;
-import org.gradle.api.tasks.InputDirectory;
 import org.gradle.api.tasks.JavaExec;
 import org.gradle.api.tasks.Optional;
+import org.gradle.api.tasks.OutputDirectory;
 
 import javax.inject.Inject;
 import java.io.File;
@@ -19,6 +19,8 @@ import java.util.List;
  */
 public class XjcTask extends JavaExec {
 
+    private final static String OUTPUT_DIR = "generated/sources/xjc";
+
     private final Property<String> schema;
     private final DirectoryProperty outputDir;
     private final ListProperty<File> bindings;
@@ -29,8 +31,9 @@ public class XjcTask extends JavaExec {
     @Inject
     public XjcTask(ObjectFactory objectFactory) {
         this.schema = objectFactory.property(String.class);
-        this.outputDir = objectFactory.directoryProperty();
         this.bindings = objectFactory.listProperty(File.class);
+        this.outputDir = objectFactory.directoryProperty()
+                .convention(getProject().getLayout().getBuildDirectory().dir(OUTPUT_DIR));
     }
 
     /**
@@ -42,21 +45,20 @@ public class XjcTask extends JavaExec {
     }
 
     /**
-     * @return outputDir
-     */
-    @InputDirectory
-    @Optional
-    public DirectoryProperty getOutputDir() {
-        return outputDir;
-    }
-
-    /**
      * @return bindingPaths
      */
     @Input
     @Optional
     public ListProperty<File> getBindings() {
         return bindings;
+    }
+
+    /**
+     * @return outputDir
+     */
+    @OutputDirectory
+    public DirectoryProperty getOutputDir() {
+        return outputDir;
     }
 
     @Override
@@ -99,9 +101,9 @@ public class XjcTask extends JavaExec {
     }
 
     private boolean createOutputDirectory() {
-        File targetFile = outputDir.get().getAsFile();
-        if (!targetFile.exists()) {
-            return targetFile.mkdirs();
+        File outputDirectory = outputDir.get().getAsFile();
+        if (!outputDirectory.exists()) {
+            return outputDirectory.mkdirs();
         }
         return false;
     }
