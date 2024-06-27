@@ -24,7 +24,7 @@ dependencies {
 }
 
 gradlePlugin {
-    website = 'https://github.com/alexpercont/xjc-gradle-plugin'
+    website = 'https://github.com/alexpercont/xjc-gradle-plugin/wiki'
     vcsUrl = 'https://github.com/alexpercont/xjc-gradle-plugin'
     plugins {
         xjc {
@@ -32,7 +32,7 @@ gradlePlugin {
             implementationClass = 'io.github.alexpercont.plugins.xjc.XjcPlugin'
             tags = ['xjc', 'jaxb', 'java']
             displayName = 'XJC Gradle Plugin'
-            description = 'A Gradle plugin to generate Java classes from XML Schema files using the XJC tool.'
+            description = 'Yet another Gradle plugin for generating Java code from XSD definition.'
         }
     }
 }
