@@ -2,11 +2,11 @@
 
 ![Sonar](https://github.com/alexpercont/xjc-gradle-plugin/actions/workflows/sonar.yml/badge.svg?branch=main)
 
-Yet another XJC Gradle plugin.
+Yet another Gradle plugin for generating Java code from XSD definition.
 
-This plugin allows you to generate Java classes from XML schema files.
+## Usage
 
-## Minimal usage
+To use the XJC Gradle plugin, you need to apply it in you
 
 ```groovy
 plugins {
@@ -29,12 +29,8 @@ The plugin provides the following configuration options:
 
 ```groovy
 xjc {
-    // The schema file to generate Java classes from. Mandatory field.
+    // The schema file to generate Java classes from. Mandatory field. Value given is the default.
     schema = 'src/main/resources/schema.xsd'
-    
-    // The directory to output the generated classes
-    // By default, the output directory is 'build/generated/xjc'
-    outputDir = file('src/generated/java')
     
     // The directories or files to be used as binding files for XJC customization
     // Optional. No bindings are applied if not set.
