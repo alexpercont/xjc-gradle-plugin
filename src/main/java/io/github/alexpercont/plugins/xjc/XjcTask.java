@@ -20,6 +20,7 @@ import java.util.List;
 public class XjcTask extends JavaExec {
 
     private static final String OUTPUT_DIR = "generated/sources/xjc";
+    private static final String EPISODE_FILE = "META-INF/sun-jaxb.episode";
 
     private final Property<String> schema;
     private final DirectoryProperty outputDir;
@@ -76,6 +77,7 @@ public class XjcTask extends JavaExec {
         addOutputDirectory(args);
         addBindingsDirectories(args);
         addExtension(args);
+        addEpisodeFile(args);
         addSchemaDirectory(args);
         return args;
     }
@@ -100,11 +102,22 @@ public class XjcTask extends JavaExec {
         args.add("-extension");
     }
 
+    private void addEpisodeFile(final List<String> args) {
+        args.add("-episode");
+        args.add(new File(outputDir.get().getAsFile(), EPISODE_FILE).getPath());
+    }
+
     private boolean createOutputDirectory() {
-        File outputDirectory = outputDir.get().getAsFile();
-        if (!outputDirectory.exists()) {
-            return outputDirectory.mkdirs();
+        File outputDirectory = outputDir.get().getAsFile(),
+                metaInfDirectory = new File(outputDirectory, "META-INF");
+        boolean outputDirectoryCreated = false;
+        if(!outputDirectory.exists()) {
+            outputDirectoryCreated = outputDirectory.mkdirs();
         }
-        return true;
+
+        if(!metaInfDirectory.exists()) {
+            outputDirectoryCreated &= metaInfDirectory.mkdirs();
+        }
+        return outputDirectoryCreated;
     }
 }

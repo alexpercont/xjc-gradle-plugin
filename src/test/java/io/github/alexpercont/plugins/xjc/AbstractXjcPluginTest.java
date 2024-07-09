@@ -47,6 +47,9 @@ public abstract class AbstractXjcPluginTest {
         Assert.assertNotNull("XJC output folder is empty.", outputFiles);
         Assert.assertTrue("XJC output folder is empty.", outputFiles.length > 0);
 
+        File episodeFile = new File(xjcFolder, "META-INF/sun-jaxb.episode");
+        Assert.assertTrue("XJC output folder does not contain the episode file.", episodeFile.exists());
+
         Set<File> files = testProject.getExtensions().getByType(JavaPluginExtension.class)
                 .getSourceSets().getByName("main").getJava().getSrcDirs();
         Assert.assertTrue("XJC output folder is not part of the Java source set", files.contains(xjcFolder));
