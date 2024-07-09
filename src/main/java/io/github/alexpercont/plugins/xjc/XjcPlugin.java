@@ -44,8 +44,6 @@ public class XjcPlugin implements Plugin<Project> {
             project.getExtensions().getByType(JavaPluginExtension.class)
                     .getSourceSets().getByName("main").getJava()
                     .srcDir(outputDir.get().getAsFile().getPath());
-
-
         });
     }
 }
