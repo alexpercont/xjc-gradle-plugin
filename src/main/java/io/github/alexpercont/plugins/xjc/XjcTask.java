@@ -110,9 +110,14 @@ public class XjcTask extends JavaExec {
     private boolean createOutputDirectory() {
         File outputDirectory = outputDir.get().getAsFile(),
                 metaInfDirectory = new File(outputDirectory, "META-INF");
-        if (!outputDirectory.exists()) {
-            return outputDirectory.mkdirs() && metaInfDirectory.mkdirs();
+        boolean outputDirectoryCreated = false;
+        if(!outputDirectory.exists()) {
+            outputDirectoryCreated = outputDirectory.mkdirs();
         }
-        return true;
+
+        if(!metaInfDirectory.exists()) {
+            outputDirectoryCreated &= metaInfDirectory.mkdirs();
+        }
+        return outputDirectoryCreated;
     }
 }
