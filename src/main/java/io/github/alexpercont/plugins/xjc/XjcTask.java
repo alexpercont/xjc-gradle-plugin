@@ -3,7 +3,6 @@ package io.github.alexpercont.plugins.xjc;
 import org.gradle.api.file.DirectoryProperty;
 import org.gradle.api.model.ObjectFactory;
 import org.gradle.api.provider.ListProperty;
-import org.gradle.api.provider.Property;
 import org.gradle.api.tasks.Input;
 import org.gradle.api.tasks.JavaExec;
 import org.gradle.api.tasks.Optional;
@@ -22,7 +21,7 @@ public class XjcTask extends JavaExec {
     private static final String OUTPUT_DIR = "generated/sources/xjc";
     private static final String EPISODE_FILE = "META-INF/sun-jaxb.episode";
 
-    private final Property<String> schema;
+    private final ListProperty<String> schema;
     private final DirectoryProperty outputDir;
     private final ListProperty<File> bindings;
 
@@ -31,7 +30,7 @@ public class XjcTask extends JavaExec {
      */
     @Inject
     public XjcTask(ObjectFactory objectFactory) {
-        this.schema = objectFactory.property(String.class);
+        this.schema = objectFactory.listProperty(String.class);
         this.bindings = objectFactory.listProperty(File.class);
         this.outputDir = objectFactory.directoryProperty()
                 .convention(getProject().getLayout().getBuildDirectory().dir(OUTPUT_DIR));
@@ -41,7 +40,7 @@ public class XjcTask extends JavaExec {
      * @return schema
      */
     @Input
-    public Property<String> getSchema() {
+    public ListProperty<String> getSchema() {
         return schema;
     }
 
@@ -64,10 +63,10 @@ public class XjcTask extends JavaExec {
 
     @Override
     public void exec() {
+        checkForEmptySchema();
         if (createOutputDirectory()) {
             getLogger().info("Output directory created");
         }
-
         setArgs(constructArgs());
         super.exec();
     }
@@ -80,6 +79,12 @@ public class XjcTask extends JavaExec {
         addEpisodeFile(args);
         addSchemaDirectory(args);
         return args;
+    }
+
+    private void checkForEmptySchema(){
+        if(schema.get().isEmpty()){
+            throw new IllegalArgumentException("Schema is not specified");
+        }
     }
 
     private void addOutputDirectory(final List<String> args) {
@@ -95,7 +100,7 @@ public class XjcTask extends JavaExec {
     }
 
     private void addSchemaDirectory(final List<String> args) {
-        args.add(schema.get());
+        args.addAll(schema.get());
     }
 
     private void addExtension(final List<String> args) {
@@ -108,8 +113,8 @@ public class XjcTask extends JavaExec {
     }
 
     private boolean createOutputDirectory() {
-        File outputDirectory = outputDir.get().getAsFile(),
-                metaInfDirectory = new File(outputDirectory, "META-INF");
+        File outputDirectory = outputDir.get().getAsFile();
+        File metaInfDirectory = new File(outputDirectory, "META-INF");
         boolean outputDirectoryCreated = false;
         if(!outputDirectory.exists()) {
             outputDirectoryCreated = outputDirectory.mkdirs();

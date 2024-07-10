@@ -1,11 +1,11 @@
 package io.github.alexpercont.plugins.xjc;
 
 import org.gradle.api.Project;
-import org.gradle.api.internal.provider.MissingValueException;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.*;
+import java.util.Collections;
 import java.util.Objects;
 
 public class XjcTaskTest extends AbstractXjcPluginTest {
@@ -16,7 +16,7 @@ public class XjcTaskTest extends AbstractXjcPluginTest {
         String schemaPath = Objects.requireNonNull(getClass().getResource("schema_01.xsd"))
                 .getPath();
         testProject.getExtensions().getByType(XjcPluginExtension.class)
-                .getSchema().set(schemaPath);
+                .getSchema().set(Collections.singletonList(schemaPath));
 
         ((XjcTask) testProject.getTasks().getByName("xjc")).exec();
         validateGeneratedCodeInDefaultFolder();
@@ -32,7 +32,7 @@ public class XjcTaskTest extends AbstractXjcPluginTest {
         File f = new File(sampleSchemaPath);
         String sampleSchemaDir = f.getParent();
         testProject.getExtensions().getByType(XjcPluginExtension.class)
-                .getSchema().set(sampleSchemaDir);
+                .getSchema().set(Collections.singletonList(sampleSchemaDir));
         ((XjcTask) testProject.getTasks().getByName("xjc")).exec();
         validateGeneratedCodeInDefaultFolder();
     }
@@ -42,12 +42,12 @@ public class XjcTaskTest extends AbstractXjcPluginTest {
         Project testProject = getTestProject();
         String url = "https://jakarta.ee/xml/ns/jakartaee/web-common_6_0.xsd";
         testProject.getExtensions().getByType(XjcPluginExtension.class)
-                .getSchema().set(url);
+                .getSchema().set(Collections.singletonList(url));
         ((XjcTask) testProject.getTasks().getByName("xjc")).exec();
         validateGeneratedCodeInDefaultFolder();
     }
 
-    @Test(expected = MissingValueException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void shouldFailWhenSourceIsNotSpecified() {
         Project testProject = getTestProject();
         ((XjcTask) testProject.getTasks().getByName("xjc")).exec();

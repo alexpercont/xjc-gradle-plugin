@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import java.io.File;
 import java.net.URL;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -17,7 +18,7 @@ public class XjcPluginBindingsTest extends AbstractXjcPluginTest {
         super.defineBaseProject();
         Project testProject = getTestProject();
         URL schemaUrl = Objects.requireNonNull(getClass().getResource("schema_01.xsd"));
-        String schemaPath = schemaUrl.getPath();
+        List<String> schemaPath = Collections.singletonList(schemaUrl.getPath());
 
         testProject.getExtensions().getByType(XjcPluginExtension.class)
                 .getSchema().set(schemaPath);
