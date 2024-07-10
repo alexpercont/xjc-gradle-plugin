@@ -3,7 +3,6 @@ package io.github.alexpercont.plugins.xjc;
 import org.gradle.api.Project;
 import org.gradle.api.model.ObjectFactory;
 import org.gradle.api.provider.ListProperty;
-import org.gradle.api.provider.Property;
 import org.gradle.api.tasks.Input;
 import org.gradle.api.tasks.Optional;
 
@@ -15,7 +14,7 @@ import java.io.File;
  */
 public class XjcPluginExtension {
 
-    private final Property<String> schema;
+    private final ListProperty<String> schema;
     private final ListProperty<File> bindingPaths;
 
     /**
@@ -24,7 +23,7 @@ public class XjcPluginExtension {
     @Inject
     public XjcPluginExtension(final Project project) {
         ObjectFactory objectFactory = project.getObjects();
-        this.schema = objectFactory.property(String.class);
+        this.schema = objectFactory.listProperty(String.class);
         this.bindingPaths = objectFactory.listProperty(File.class);
     }
 
@@ -32,7 +31,7 @@ public class XjcPluginExtension {
      * @return schema
      */
     @Input
-    public Property<String> getSchema() {
+    public ListProperty<String> getSchema() {
         return schema;
     }
 
