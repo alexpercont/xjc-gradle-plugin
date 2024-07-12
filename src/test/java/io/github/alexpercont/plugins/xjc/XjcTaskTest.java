@@ -24,9 +24,6 @@ public class XjcTaskTest extends AbstractXjcPluginTest {
     @Test
     public void shouldGenerateCodeWhenSourceDirectoryIsSpecified() {
         Project testProject = getTestProject();
-        //Assert.assertTrue(testProject.getLayout().getBuildDirectory()
-        //        .dir("generated/sources/xjc")
-        //        .get().getAsFile().mkdirs());
         String sampleSchemaPath = Objects.requireNonNull(getClass().getResource("schema_01.xsd")).getPath();
         File f = new File(sampleSchemaPath);
         String sampleSchemaDir = f.getParent();

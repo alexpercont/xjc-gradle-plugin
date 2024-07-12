@@ -1,7 +1,6 @@
 package io.github.alexpercont.plugins.xjc;
 
 import org.gradle.api.artifacts.Configuration;
-import org.gradle.api.artifacts.ResolvedArtifact;
 import org.gradle.api.file.DirectoryProperty;
 import org.gradle.api.model.ObjectFactory;
 import org.gradle.api.provider.ListProperty;
@@ -16,7 +15,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 import java.util.zip.ZipFile;
 
 /**
@@ -137,9 +135,7 @@ public class XjcTask extends JavaExec {
         getProject().getConfigurations().stream()
                 .filter(Configuration::isCanBeResolved)
                 .forEach(configuration -> {
-                    System.out.println(configuration.getName());
-                    List<String> candidates = getCandidatesFromConfig(configuration);
-                    args.addAll(candidates);
+                    args.addAll(getCandidatesFromConfig(configuration));
                 });
     }
 
@@ -149,7 +145,6 @@ public class XjcTask extends JavaExec {
                 .filter(XjcTask::containsEpisodeFile)
                 .map(File::getAbsolutePath)
                 .toList();
-
     }
 
     private static boolean isJarFile(File file) {
