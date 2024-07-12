@@ -18,9 +18,12 @@ public class XjcPlugin implements Plugin<Project> {
 
         // Create XJC plugin configuration.
         project.getConfigurations().create("xjc", configuration-> {
-            configuration.setVisible(false);
+            configuration.setVisible(true);
             configuration.setTransitive(true);
+            configuration.setCanBeResolved(true);
+            configuration.setCanBeConsumed(true);
             configuration.setDescription("XJC configuration");
+            configuration.extendsFrom(project.getConfigurations().getByName("implementation"));
         });
 
         // Adding JAXB-XJC dependency.
