@@ -134,9 +134,7 @@ public class XjcTask extends JavaExec {
     private void addClasspathDependencies(final List<String> args) {
         getProject().getConfigurations().stream()
                 .filter(Configuration::isCanBeResolved)
-                .forEach(configuration -> {
-                    args.addAll(getCandidatesFromConfig(configuration));
-                });
+                .forEach(configuration -> args.addAll(getCandidatesFromConfig(configuration)));
     }
 
     private static List<String> getCandidatesFromConfig(Configuration configuration) {
