@@ -10,7 +10,7 @@ To use the XJC Gradle plugin, you need to apply it in you
 
 ```groovy
 plugins {
-    id 'io.github.alexpercont.plugins.xjc' version '1.0'
+    id 'io.github.alexpercont.plugins.xjc' version '1.1'
 }
 
 xjc {
