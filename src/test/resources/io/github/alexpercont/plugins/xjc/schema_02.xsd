@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+        xmlns:cfdi="http://www.sat.gob.mx/cfd/3"
+        xmlns:tst="http://github.io/alexpercont/plugins/xjc/test/schema"
+        targetNamespace="http://github.io/alexpercont/plugins/xjc/test/schema">
+    <import namespace="http://www.sat.gob.mx/cfd/3" schemaLocation="https://www.sat.gob.mx/sitio_internet/cfd/3/cfdv32.xsd" />
+
+    <complexType name="domicilioRegistrado">
+        <sequence>
+            <element type="cfdi:t_Ubicacion" name="domicilio" minOccurs="1" maxOccurs="1" />
+            <element type="dateTime" name="fechaRegistro" minOccurs="1" maxOccurs="1" />
+        </sequence>
+    </complexType>
+
+    <element name="registroDomiciliar" type="tst:domicilioRegistrado" />
+
+</schema>

@@ -54,4 +54,9 @@ public abstract class AbstractXjcPluginTest {
                 .getSourceSets().getByName("main").getJava().getSrcDirs();
         Assert.assertTrue("XJC output folder is not part of the Java source set", files.contains(xjcFolder));
     }
+
+    protected void validateBuildFolderWasNotCreated(String path){
+        File nonExpectedDir = new File(testProject.getProjectDir(), "build/generated/sources/xjc/" + path);
+        Assert.assertFalse("Folder for dependencies should not have been created", nonExpectedDir.exists());
+    }
 }

@@ -1,5 +1,6 @@
 package io.github.alexpercont.plugins.xjc;
 
+import org.gradle.api.artifacts.Configuration;
 import org.gradle.api.file.DirectoryProperty;
 import org.gradle.api.model.ObjectFactory;
 import org.gradle.api.provider.ListProperty;
@@ -10,8 +11,11 @@ import org.gradle.api.tasks.OutputDirectory;
 
 import javax.inject.Inject;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.zip.ZipFile;
 
 /**
  *
@@ -77,6 +81,7 @@ public class XjcTask extends JavaExec {
         addBindingsDirectories(args);
         addExtension(args);
         addEpisodeFile(args);
+        addClasspathDependencies(args);
         addSchemaDirectory(args);
         return args;
     }
@@ -124,5 +129,35 @@ public class XjcTask extends JavaExec {
             outputDirectoryCreated &= metaInfDirectory.mkdirs();
         }
         return outputDirectoryCreated;
+    }
+
+    private void addClasspathDependencies(final List<String> args) {
+        getProject().getConfigurations().stream()
+                .filter(Configuration::isCanBeResolved)
+                .forEach(configuration -> args.addAll(getCandidatesFromConfig(configuration)));
+    }
+
+    private static List<String> getCandidatesFromConfig(Configuration configuration) {
+        return configuration.getResolvedConfiguration().getFiles().stream()
+                .filter(XjcTask::isJarFile)
+                .filter(XjcTask::containsEpisodeFile)
+                .map(File::getAbsolutePath)
+                .toList();
+    }
+
+    private static boolean isJarFile(File file) {
+        return file.getName().endsWith(".jar");
+    }
+
+    private static boolean containsEpisodeFile(File file) {
+        try {
+            return containsEpisodeFile(new ZipFile(file));
+        } catch (IOException e) {
+            return false;
+        }
+    }
+
+    private static boolean containsEpisodeFile(ZipFile file) {
+        return Objects.nonNull(file.getEntry(EPISODE_FILE));
     }
 }
